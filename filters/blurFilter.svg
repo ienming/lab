@@ -1,0 +1,7 @@
+<svg id="defs">
+  <defs>
+    <filter id="blurFilter" filterUnits="objectBoundingBox">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
+    </filter>
+  </defs>
+</svg>

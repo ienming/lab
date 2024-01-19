@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      svg{
+        display: none;
+      }
+      img{
+        filter: url('#filter-ripple-1');
+      }
+    </style>
+</head>
+<body>
+    <svg>
+        <defs>
+          <filter id="filter-ripple-1">
+            <feImage id="svgFeImage" xlink:href="./imgs/grad4.jpg" x="0" y="0" width="512" height="512" result="ripple"></feImage>
+            <feDisplacementMap id="feMap" xChannelSelector="R" yChannelSelector="G" color-interpolation-filters="sRGB" in="SourceGraphic" in2="ripple" scale="47"></feDisplacementMap>
+            <feComposite operator="in" in2="ripple"></feComposite>
+          </filter>
+        </defs>
+      </svg>
+      <img src="./imgs/forest.jpeg" width="512" alt="">
+      <img src="./imgs/grad4.jpg" alt="">
+</body>
+</html>

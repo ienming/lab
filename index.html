@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motion Design with Lottie</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" integrity="sha512-jEnuDt6jfecCjthQAJ+ed0MTVA++5ZKmlUcmDGBv2vUI/REn6FuIdixLNnQT+vKusE2hhTk2is3cFvv5wA+Sgg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        html, body{
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fafafa;
+        }
+
+        .svg-defs{
+            display: none;
+        }
+
+        #lottieView{
+            height: 70%;
+        }
+
+        #lottieView{
+            filter: url("#roughFilter");
+            /* filter: url("#blurFilter"); */
+        }
+    </style>
+</head>
+<body>
+    <svg class="svg-defs">
+        <defs>
+          <filter id="blurFilter" filterUnits="objectBoundingBox">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
+          </filter>
+          <filter id="lineFilter" filterUnits="objectBoundingBox">
+            <!-- 元絵の輝度を透過度に変更 -->
+            <feColorMatrix type="luminanceToAlpha" in="SourceGraphic" />
+            <!-- 透過度を二値化 -->
+            <feComponentTransfer>
+              <feFuncA type="linear" slope="-255" intercept="19" />
+            </feComponentTransfer>
+            <!-- 合成 -->
+            <feComposite in="SourceGraphic" result="line" operator="in" />
+            <!-- ノイズを生成する原始フィルター -->
+            <feTurbulence type="turbulence" baseFrequency="0.4" numOctaves="1" seed="1" stitchTiles="stitch" result="noise" />
+            <!-- ドットのテクスチャを読み込み -->
+            <!-- <feImage x="0" y="0" width="15" height="15" href="/imgs/dots.png" result="txDots" /> -->
+            <!-- テクスチャをタイリング -->
+            <feTile in="txDots" result="txDotTile" />
+            <!-- テクスチャとノイズを合成 -->
+            <feBlend in="noise" in2="txDotTile" mode="normal" result="txNoised" />
+            <!-- ノイズを元に画像を歪める -->
+            <feDisplacementMap in="line" in2="txNoised" xChannelSelector="R" yChannelSelector="G" scale="1.1" result="displacement" />
+            <!-- 領域を拡張して線を太らせる -->
+            <feMorphology operator="dilate" radius="0.18" in="displacement" result="morphology" />
+          </filter>
+          <!-- 手描き感のあるラフな表現を加えるフィルターの定義 -->
+            <filter id="roughFilter" filterUnits="objectBoundingBox" x="0" y="0" width="100%" height="100%">
+                <!-- ノイズを生成する原始フィルター -->
+                <feTurbulence type="fractalNoise" baseFrequency="0.01 0.1" numOctaves="5" seed="1" stitchTiles="stitch">
+                <!-- ノイズのシードをアニメーションで変化させる -->
+                <animate
+                    attributeName="seed"
+                    from="1"
+                    to="100"
+                    dur="10s"
+                    repeatCount="indefinite"
+                />
+                </feTurbulence>
+                <!-- ノイズを元に画像を歪める -->
+                <feDisplacementMap in="SourceGraphic" xChannelSelector="R" yChannelSelector="G" scale="10"/>
+            </filter>
+        </defs>
+    </svg>
+    <div id="lottieView"></div>
+    <script>
+        console.log(lottie)
+        // Lottieを再生する親要素（空のdiv要素）を取得
+        const view = document.querySelector("#lottieView");
+        // JSONを指定して読み込み・再生
+        lottie.loadAnimation({
+            container: view,
+            renderer: "svg",
+            loop: true,
+            autoplay: true,
+            path: '/lotties/christmas.json',
+        });
+    </script>
+</body>
+</html>
